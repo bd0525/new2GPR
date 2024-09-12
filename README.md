@@ -22,7 +22,7 @@
    Resources:
    
 3. Learning Gaussian Processes
-   Objective: Understand Gaussian processe.
+   Obj: Understand Gaussian processe.
    
    Topics:
 	Understanding Gaussian distributions.
@@ -32,7 +32,7 @@
    Resources: "Gaussian Processes for Machine Learning" by Carl Edward Rasmussen and Christopher K. I. Williams (https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning).
    
 4. Implementation of Gaussian Process from Scratch
-   Objective: Implement a basic GPR model using Python.
+   Obj: Implement a basic GPR model using Python.
    
    Tools/Libraries:
    
@@ -45,7 +45,7 @@
    Resources:
    
 5. Advanced GPR Features
-   Objective: Enhance GPR model with more features and optimization.
+   Obj: Enhance GPR model with more features and optimization.
    
    Topics:
 	Optimizing kernel parameters.
@@ -61,7 +61,7 @@
    Resources:
    
 6. Application and Analysis
-   Objective: Apply your GPR model to real-world data and analyze its performance.
+   Obj: Apply your GPR model to real-world data and analyze its performance.
    
    Steps:
 	Choose a dataset relevant to your interests or industry.
