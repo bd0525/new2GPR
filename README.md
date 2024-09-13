@@ -1,74 +1,75 @@
 - This work mainly showing that how I start from scratch to learn Gaussian process based on <sup>[1]</sup>. Hopefully it will help if you want to learn GP.
 
-*** Detailed study and implementation plan ***
+# Detailed study and implementation plan
 
-1. Fundamental Statistical Concepts<br>
-   Obj: Understand the basics of statistics that are crucial for GPR.
+## 1. **Fundamental Statistical Concepts**<br>
+   ### Obj: Understand the basics of statistics that are crucial for GPR.
    
-   Topics:
+   ### Topics:
 	Mean, variance, covariance, and correlation.
    	Review of probability theory.
 	
-   Resources:
+   ### Resources:
    
-2. Introduction to Bayesian Statistics<br>
-   Obj: Grasp the principles of Bayesian inference, foundational for understanding GPR.
+## 2. Introduction to Bayesian Statistics<br>
+   ### Obj: Grasp the principles of Bayesian inference, foundational for understanding GPR.
    
-   Topics:
+   ### Topics:
 	Bayes' theorem.
    	Prior, likelihood, and posterior distributions.
    	Conjugate priors and Bayesian updating.
 	
-   Resources:
+   ### Resources:
    
-3. Learning Gaussian Processes<br>
-   Obj: Understand Gaussian processe.
+## 3. Learning Gaussian Processes<br>
+   ### Obj: Understand Gaussian processe.
    
-   Topics:
+   ### Topics:
 	Understanding Gaussian distributions.
    	Multivariate Gaussian distributions.
    	Kernels and covariance functions.
 	
-   Resources: "Gaussian Processes for Machine Learning" by Carl Edward Rasmussen and Christopher K. I. Williams (https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning).
+   ### Resources:<br>
+   "Gaussian Processes for Machine Learning" by Carl Edward Rasmussen and Christopher K. I. Williams (https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning).
    
-4. Implementation of Gaussian Process from Scratch<br>
-   Obj: Implement a basic GPR model using Python.
+## 4. Implementation of Gaussian Process from Scratch<br>
+   ### Obj: Implement a basic GPR model using Python.
    
-   Tools/Libraries:
+   ### Tools/Libraries:
    
-   Steps:
+   ### Steps:<br>
 	Generate synthetic data or use a simple dataset.
    	Implement the covariance matrix using a kernel function.
   	Write the function for the Gaussian process using the mean and covariance.
    	Implement prediction and update steps.
 	
-   Resources:
+   ### Resources:
    
-5. Advanced GPR Features<br>
-   Obj: Enhance GPR model with more features and optimization.
+## 5. Advanced GPR Features<br>
+   ### Obj: Enhance GPR model with more features and optimization.
    
-   Topics:
+   ### Topics:<br>
 	Optimizing kernel parameters.
    	Handling noise in data.
    	Using different kernels.
 	
-   Libraries:
+   ### Libraries:
    
-   Steps:
+   ### Steps:<br>
 	Implement parameter optimization using gradient descent or other techniques.
    	Test different kernels like RBF, Matern, and periodic.
 	
-   Resources:
+   ### Resources:<br>
    
-6. Application and Analysis<br>
-   Obj: Apply your GPR model to real-world data and analyze its performance.
+## 6. Application and Analysis<br>
+   ### Obj: Apply your GPR model to real-world data and analyze its performance.
    
-   Steps:
+   ### Steps:<br>
 	Choose a dataset relevant to your interests or industry.
    	Apply your GPR model.
    	Evaluate its performance using metrics like RMSE, log-likelihood.
-   Resources:
+   ### Resources:<br>
 
 
-- Reference:<br>
+# Reference:<br>
 [1]Williams, C. K., & Rasmussen, C. E. (2006). Gaussian processes for machine learning (Vol. 2, No. 3, p. 4). Cambridge, MA: MIT press.
