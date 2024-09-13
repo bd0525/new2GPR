@@ -72,4 +72,4 @@
 
 
 # Reference:<br>
-[1]Williams, C. K., & Rasmussen, C. E. (2006). Gaussian processes for machine learning (Vol. 2, No. 3, p. 4). Cambridge, MA: MIT press.
+[1]&nbsp;Williams, C. K., & Rasmussen, C. E. (2006). [Gaussian processes for machine learning](https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning) (Vol. 2, No. 3, p. 4). Cambridge, MA: MIT press.
