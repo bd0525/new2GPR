@@ -2,7 +2,7 @@
 
 *** Detailed study and implementation plan ***
 
-1. Fundamental Statistical Concepts
+1. Fundamental Statistical Concepts<br>
    Obj: Understand the basics of statistics that are crucial for GPR.
    
    Topics:
@@ -11,7 +11,7 @@
 	
    Resources:
    
-2. Introduction to Bayesian Statistics
+2. Introduction to Bayesian Statistics<br>
    Obj: Grasp the principles of Bayesian inference, foundational for understanding GPR.
    
    Topics:
@@ -21,7 +21,7 @@
 	
    Resources:
    
-3. Learning Gaussian Processes
+3. Learning Gaussian Processes<br>
    Obj: Understand Gaussian processe.
    
    Topics:
@@ -31,7 +31,7 @@
 	
    Resources: "Gaussian Processes for Machine Learning" by Carl Edward Rasmussen and Christopher K. I. Williams (https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning).
    
-4. Implementation of Gaussian Process from Scratch
+4. Implementation of Gaussian Process from Scratch<br>
    Obj: Implement a basic GPR model using Python.
    
    Tools/Libraries:
@@ -44,7 +44,7 @@
 	
    Resources:
    
-5. Advanced GPR Features
+5. Advanced GPR Features<br>
    Obj: Enhance GPR model with more features and optimization.
    
    Topics:
@@ -60,7 +60,7 @@
 	
    Resources:
    
-6. Application and Analysis
+6. Application and Analysis<br>
    Obj: Apply your GPR model to real-world data and analyze its performance.
    
    Steps:
@@ -70,5 +70,5 @@
    Resources:
 
 
-- Reference:
+- Reference:<br>
 [1]Williams, C. K., & Rasmussen, C. E. (2006). Gaussian processes for machine learning (Vol. 2, No. 3, p. 4). Cambridge, MA: MIT press.
