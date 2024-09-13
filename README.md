@@ -3,7 +3,8 @@
 # Detailed study and implementation plan
 
 ## 1. **Fundamental Statistical Concepts**<br>
-   ### Obj: Understand the basics of statistics that are crucial for GPR.
+   ### Learning Objectives:<br>
+   	Understand the basics of statistics that are crucial for GPR.
    
    ### Topics:
 	Mean, variance, covariance, and correlation.
@@ -12,7 +13,8 @@
    ### Resources:
    
 ## 2. Introduction to Bayesian Statistics<br>
-   ### Obj: Grasp the principles of Bayesian inference, foundational for understanding GPR.
+   ### Learning Objectives:<br>
+   	Grasp the principles of Bayesian inference, foundational for understanding GPR.
    
    ### Topics:
 	Bayes' theorem.
@@ -22,9 +24,10 @@
    ### Resources:
    
 ## 3. Learning Gaussian Processes<br>
-   ### Obj: Understand Gaussian processe.
+   ### Learning Objectives:<br> 
+   	Understand Gaussian processe.
    
-   ### Topics:
+   ### Topics:<br>
 	Understanding Gaussian distributions.
    	Multivariate Gaussian distributions.
    	Kernels and covariance functions.
@@ -33,7 +36,8 @@
    "Gaussian Processes for Machine Learning" by Carl Edward Rasmussen and Christopher K. I. Williams (https://direct.mit.edu/books/monograph/2320/Gaussian-Processes-for-Machine-Learning).
    
 ## 4. Implementation of Gaussian Process from Scratch<br>
-   ### Obj: Implement a basic GPR model using Python.
+   ### Learning Objectives:<br> 
+   	Implement a basic GPR model using Python.
    
    ### Tools/Libraries:
    
@@ -46,7 +50,8 @@
    ### Resources:
    
 ## 5. Advanced GPR Features<br>
-   ### Obj: Enhance GPR model with more features and optimization.
+   ### Learning Objectives:<br> 
+	Enhance GPR model with more features and optimization.
    
    ### Topics:<br>
 	Optimizing kernel parameters.
@@ -62,7 +67,8 @@
    ### Resources:<br>
    
 ## 6. Application and Analysis<br>
-   ### Obj: Apply your GPR model to real-world data and analyze its performance.
+   ### Learning Objectives:<br>
+   	Apply your GPR model to real-world data and analyze its performance.
    
    ### Steps:<br>
 	Choose a dataset relevant to your interests or industry.
