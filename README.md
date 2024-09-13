@@ -1,4 +1,4 @@
-- This work mainly showing that how I start from scratch to learn Gaussian process based on [1]. Hopefully it will help if you want to learn GP.
+- This work mainly showing that how I start from scratch to learn Gaussian process based on <sup>[1]</sup>. Hopefully it will help if you want to learn GP.
 
 *** Detailed study and implementation plan ***
 
