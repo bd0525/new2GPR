@@ -68,12 +68,12 @@
    
 ## 6. Application and Analysis<br>
    ### Learning Objectives:<br>
-   	Apply your GPR model to real-world data and analyze its performance.
+   	Apply GPR model to real-world data and analyze its performance.
    
    ### Steps:<br>
-	Choose a dataset relevant to your interests or industry.
-   	Apply your GPR model.
-   	Evaluate its performance using metrics like RMSE, log-likelihood.
+	Choose a dataset of interests.
+   	Apply GPR model.
+   	Evaluate its performance.
    ### Resources:<br>
 
 
