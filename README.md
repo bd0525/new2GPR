@@ -29,7 +29,7 @@
    
    ### Topics:<br>
 	Understanding Gaussian distributions.
-   	Multivariate Gaussian distributions.
+   	Multivariate Gaussian distributions.💥
    	Kernels and covariance functions.
 	
    ### Resources:<br>

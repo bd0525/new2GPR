@@ -14,15 +14,11 @@ X_test = linspace(-3, 3, 100)';
 m_test = length(X_test);
 
 figure;
-title('Gaussian Process Regression');
-xlabel('X');
-ylabel('Y');
-
 set(gcf,'color','w'); % gcf stands for 'get current figure'
 
 scriptPath = mfilename('fullpath');
 [scriptDir, ~, ~] = fileparts(scriptPath);
-filename = fullfile(scriptDir, 'simple_gp_demo.gif');
+filename = fullfile(scriptDir, 'gpr_onedim_demo.gif');
 
 for i = 1:n
     % Update the kernel matrix with new training point
@@ -32,7 +28,7 @@ for i = 1:n
     end
     
     % Add noise variance to the diagonal elements
-    K(1:i, 1:i) = K(1:i, 1:i) + 0.1^2 * eye(i);
+    K(1:i, 1:i) = K(1:i, 1:i) + 0.05^2 * eye(i);
     
     % Compute the kernel between test points and training points
     K_test = zeros(m_test, i);
@@ -57,17 +53,26 @@ for i = 1:n
     var_test = K_test_test - K_test * K_inv * K_test';
     std_test = sqrt(diag(var_test));
     
-    % Plot the results
+    % Identify test points that are not training points
+    [isTrain, ~] = ismembertol(X_test, X(1:i), 1e-6);
+    X_test_CI = X_test(~isTrain);
+    mu_test_CI = mu_test(~isTrain);
+    std_test_CI = std_test(~isTrain);
+    %% Plot the results
     cla; % clear current axes
     hold on;
-    fill([X_test; flipud(X_test)], ...
-         [mu_test - 2 * std_test; flipud(mu_test + 2 * std_test)], ...
-         [0.9, 0.9, 0.9], 'EdgeColor', 'none','FaceAlpha',0.5); % 95% CI
+    fill([X_test_CI; flipud(X_test_CI)], ...
+         [mu_test_CI - 2 * std_test_CI; flipud(mu_test_CI + 2 * std_test_CI)], ...
+         [0.7, 0.7, 0.7], 'EdgeColor', 'none','FaceAlpha',0.5); % 95% CI
     plot(X_test, mu_test, 'r', 'LineWidth', 2); % Predictive mean
     scatter(X(1:i), Y(1:i), 50, 'filled','MarkerFaceColor','blue'); % Plot the training points
     hold off;
     legend('95% CI', 'GPR mean', 'Training points', 'Location', 'Best');
-
+    title(['Gaussian Process Regression (N = ' num2str(i) ')']);
+    xlabel('X');
+    ylabel('Y');
+    
+    %% Generate gif
     drawnow;
     frame = getframe(gcf); % Capture figure frame
     im = frame2im(frame); % Convert frame to image
