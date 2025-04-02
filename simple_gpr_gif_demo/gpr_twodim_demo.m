@@ -1,10 +1,10 @@
-% Generate sample data
+%% Generate sample data
 X = -3 + 6 * rand(20, 2); % 20 random 2D points
-Y = sin(X(:,1)) .* cos(X(:,2)) + 0.05 * randn(20, 1); % Observations Y include some noise
+Y = sin(X(:,1)) .* cos(X(:,2)) + 0.05 * randn(20, 1); % observations Y include some noise
 n = length(X);
 
 %% Define the RBF kernel function
-sigma = 1.0; % Bandwidth of the RBF kernel
+sigma = 1.0; % bandwidth of the RBF kernel
 RBF_kernel = @(x1, x2) exp(-norm(x1 - x2)^2 / (2 * sigma^2));
 %%
 % Compute the full kernel matrix
@@ -47,10 +47,10 @@ for i = 1:n
     K_test_i = K_test(:,1:i);
     Y_i = Y(1:i);
 
-    % Compute predictive mean
+    % Compute predicted mean
     mu_test = K_test_i * K_inv * Y_i;
     
-    % Compute predictive variance
+    % Compute predicted variance
     var_test = zeros(m_test, 1);
     for k = 1:m_test
         k_star = K_test_i(k,:)';
@@ -74,7 +74,7 @@ for i = 1:n
     scatter(X(1:i,1), X(1:i,2), 50, 'filled', 'MarkerFaceColor', 'red');
 
     hold off;
-    legend('GPR mean surface', 'Training points', 'Location', 'Best');
+    legend('Predicted mean surface', 'Training points', 'Location', 'Best');
     xlabel('X1');
     ylabel('X2');
     zlabel('Y');
@@ -82,9 +82,9 @@ for i = 1:n
     view(3);
     %% Generate gif
     drawnow;
-    frame = getframe(gcf); % Capture figure frame
-    im = frame2im(frame); % Convert frame to image
-    [A, map] = rgb2ind(im, 256); % Convert image to indexed image
+    frame = getframe(gcf); % capture figure frame
+    im = frame2im(frame); % convert frame to image
+    [A, map] = rgb2ind(im, 256); % convert image to indexed image
     if i == 1
         imwrite(A, map, filename, 'gif', 'LoopCount', Inf, 'DelayTime', 1);
     else

@@ -1,20 +1,19 @@
-% Generate sample data
+%% Generate sample data
 X = -3 + 6 * rand(20, 1);
-Y = sin(X) + 0.05 * randn(20, 1); % Observations Y include some noise
+Y = sin(X) + 0.05 * randn(20, 1); % observations Y include some noise
 n = length(X);
 
 %% Define the RBF kernel function
-sigma = 1.0; % Bandwidth of the RBF kernel
+sigma = 1.0; % bandwidth of the RBF kernel
 RBF_kernel = @(x1, x2) exp(-norm(x1 - x2)^2 / (2 * sigma^2));
 %%
-K = zeros(n, n); % initialize the kernel matrix
 
-% Test inputs for prediction
-X_test = linspace(-3, 3, 100)';
+K = zeros(n, n); % initialize the kernel matrix
+X_test = linspace(-3, 3, 100)'; % test inputs for prediction
 m_test = length(X_test);
 
 figure;
-set(gcf,'color','w'); % gcf stands for 'get current figure'
+set(gcf,'color','w'); % gcf => 'get current figure'
 
 scriptPath = mfilename('fullpath');
 [scriptDir, ~, ~] = fileparts(scriptPath);
@@ -38,11 +37,11 @@ for i = 1:n
         end
     end
     
-    % Compute predictive mean
+    % Compute predicted mean
     K_inv = inv(K(1:i, 1:i));
     mu_test = K_test * K_inv * Y(1:i);
     
-    % Compute predictive variance
+    % Compute predicted variance
     K_test_test = zeros(m_test, m_test);
     for k = 1:m_test
         for j = 1:m_test
@@ -64,19 +63,19 @@ for i = 1:n
     fill([X_test_CI; flipud(X_test_CI)], ...
          [mu_test_CI - 2 * std_test_CI; flipud(mu_test_CI + 2 * std_test_CI)], ...
          [0.7, 0.7, 0.7], 'EdgeColor', 'none','FaceAlpha',0.5); % 95% CI
-    plot(X_test, mu_test, 'r', 'LineWidth', 2); % Predictive mean
-    scatter(X(1:i), Y(1:i), 50, 'filled','MarkerFaceColor','blue'); % Plot the training points
+    plot(X_test, mu_test, 'r', 'LineWidth', 2); % predicted mean
+    scatter(X(1:i), Y(1:i), 50, 'filled','MarkerFaceColor','blue'); % training points
     hold off;
-    legend('95% CI', 'GPR mean', 'Training points', 'Location', 'Best');
+    legend('95% CI', 'Predicted mean', 'Training points', 'Location', 'Best');
     title(['Gaussian Process Regression (N = ' num2str(i) ')']);
     xlabel('X');
     ylabel('Y');
     
     %% Generate gif
     drawnow;
-    frame = getframe(gcf); % Capture figure frame
-    im = frame2im(frame); % Convert frame to image
-    [A,map] = rgb2ind(im,256); % Convert image to indexed image
+    frame = getframe(gcf); % capture figure frame
+    im = frame2im(frame); % convert frame to image
+    [A,map] = rgb2ind(im,256); % convert image to indexed image
     if i == 1
         imwrite(A, map, filename, 'gif', 'LoopCount', Inf, 'DelayTime', 1);
     else
