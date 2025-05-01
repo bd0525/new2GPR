@@ -1,3 +1,6 @@
+% Copyright (c) 2025, Boyuan Deng
+% All rights reserved.
+
 %% Generate sample data
 X = -3 + 6 * rand(20, 1);
 Y = sin(X) + 0.05 * randn(20, 1); % observations Y include some noise

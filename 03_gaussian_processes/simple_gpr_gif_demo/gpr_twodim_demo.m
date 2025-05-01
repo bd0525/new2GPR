@@ -1,3 +1,6 @@
+% Copyright (c) 2025, Boyuan Deng
+% All rights reserved.
+
 %% Generate sample data
 X = -3 + 6 * rand(20, 2); % 20 random 2D points
 Y = sin(X(:,1)) .* cos(X(:,2)) + 0.05 * randn(20, 1); % observations Y include some noise

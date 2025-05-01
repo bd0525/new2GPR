@@ -1,3 +1,6 @@
+% Copyright (c) 2025, Boyuan Deng
+% All rights reserved.
+
 %% Generate Sample Data
 N_total = 20; % num of data points
 x_full = -5 + 10 * rand(N_total, 1);
