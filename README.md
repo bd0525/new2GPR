@@ -1,5 +1,6 @@
-
 This repository contains my learning journey with Gaussian Process Regression, organized into three main sections:
+
+![Multi-output GP Demo](03_gaussian_processes/.../mogp_indep_demo.gif)
 
 ## Directory Structure
 
