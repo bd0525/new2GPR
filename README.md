@@ -1,6 +1,7 @@
 This repository contains my learning journey with Gaussian Process Regression, organized into three main sections:
 
 ![Multi-output GP Demo](https://github.com/bydeng01/new2GPR/blob/main/03_gaussian_processes/simple_gpr_gif_demo/mogp_indep_demo.gif)
+![TwoDim-input GP Demo](https://github.com/bydeng01/new2GPR/blob/main/03_gaussian_processes/simple_gpr_gif_demo/gpr_twodim_demo.gif)
 
 ## Directory Structure
 
