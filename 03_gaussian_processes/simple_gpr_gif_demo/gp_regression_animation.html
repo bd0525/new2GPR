@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Process Regression Animation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-size: 1.2em;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        
+        .info-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #ff6b6b;
+        }
+        
+        .info-card h3 {
+            margin-top: 0;
+            color: #ffd93d;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gaussian Process Regression</h1>
+        <p class="subtitle">Watch how uncertainty decreases as we add training data points</p>
+        
+        <div class="controls">
+            <button onclick="resetAnimation()">Reset</button>
+            <button onclick="addDataPoint()" id="addBtn">Add Data Point</button>
+            <button onclick="toggleAutoPlay()" id="autoBtn">Auto Play</button>
+            <button onclick="generateNewFunction()">New True Function</button>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="gpCanvas" width="800" height="500"></canvas>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(100, 150, 255, 0.3); border: 2px solid #4c9eff;"></div>
+                <span>Uncertainty (±2σ)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4c9eff;"></div>
+                <span>GP Mean Prediction</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ff4757;"></div>
+                <span>True Function</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #2ed573;"></div>
+                <span>Training Data</span>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="info-card">
+                <h3>Current State</h3>
+                <p id="dataCount">Data points: 0</p>
+                <p id="uncertaintyLevel">Average uncertainty: High</p>
+            </div>
+            
+            <div class="info-card">
+                <h3>How It Works</h3>
+                <p>Gaussian Processes model uncertainty over functions. As we add data, the model becomes more confident in regions near observations while maintaining uncertainty elsewhere.</p>
+            </div>
+            
+            <div class="info-card">
+                <h3>Key Concepts</h3>
+                <p><strong>Prior:</strong> Initial belief about the function<br>
+                <strong>Posterior:</strong> Updated belief after seeing data<br>
+                <strong>Uncertainty:</strong> Shaded region shows ±2σ confidence</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gpCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Animation state
+        let dataPoints = [];
+        let autoPlay = false;
+        let autoPlayInterval;
+        
+        // GP parameters
+        const lengthScale = 0.3;
+        const variance = 1.0;
+        const noiseVariance = 0.01;
+        const xRange = [-2, 2];
+        const yRange = [-2, 2];
+        
+        // Generate test points for prediction
+        const testX = [];
+        for (let i = 0; i <= 100; i++) {
+            testX.push(xRange[0] + (xRange[1] - xRange[0]) * i / 100);
+        }
+        
+        // True function (hidden from GP)
+        let trueFunction;
+        
+        function generateNewFunction() {
+            // Generate a random smooth function
+            const coeffs = Array.from({length: 5}, () => (Math.random() - 0.5) * 2);
+            trueFunction = (x) => {
+                return coeffs[0] * Math.sin(2 * x) + 
+                       coeffs[1] * Math.cos(3 * x) + 
+                       coeffs[2] * Math.sin(x) * Math.exp(-x*x/2) +
+                       coeffs[3] * x * Math.exp(-x*x/4) +
+                       coeffs[4] * Math.sin(5 * x) * 0.3;
+            };
+            resetAnimation();
+        }
+        
+        // RBF kernel
+        function rbfKernel(x1, x2) {
+            const diff = x1 - x2;
+            return variance * Math.exp(-diff * diff / (2 * lengthScale * lengthScale));
+        }
+        
+        // Matrix operations
+        function matrixInverse(matrix) {
+            const n = matrix.length;
+            const identity = Array(n).fill().map((_, i) => 
+                Array(n).fill().map((_, j) => i === j ? 1 : 0)
+            );
+            
+            // Gaussian elimination
+            for (let i = 0; i < n; i++) {
+                let maxRow = i;
+                for (let k = i + 1; k < n; k++) {
+                    if (Math.abs(matrix[k][i]) > Math.abs(matrix[maxRow][i])) {
+                        maxRow = k;
+                    }
+                }
+                [matrix[i], matrix[maxRow]] = [matrix[maxRow], matrix[i]];
+                [identity[i], identity[maxRow]] = [identity[maxRow], identity[i]];
+                
+                for (let k = i + 1; k < n; k++) {
+                    const factor = matrix[k][i] / matrix[i][i];
+                    for (let j = i; j < n; j++) {
+                        matrix[k][j] -= factor * matrix[i][j];
+                    }
+                    for (let j = 0; j < n; j++) {
+                        identity[k][j] -= factor * identity[i][j];
+                    }
+                }
+            }
+            
+            for (let i = n - 1; i >= 0; i--) {
+                for (let k = i - 1; k >= 0; k--) {
+                    const factor = matrix[k][i] / matrix[i][i];
+                    for (let j = 0; j < n; j++) {
+                        identity[k][j] -= factor * identity[i][j];
+                    }
+                }
+                for (let j = 0; j < n; j++) {
+                    identity[i][j] /= matrix[i][i];
+                }
+            }
+            
+            return identity;
+        }
+        
+        // GP prediction
+        function predictGP(testPoints) {
+            if (dataPoints.length === 0) {
+                return testPoints.map(x => ({
+                    mean: 0,
+                    variance: variance
+                }));
+            }
+            
+            const n = dataPoints.length;
+            const K = Array(n).fill().map(() => Array(n).fill(0));
+            const y = dataPoints.map(p => p.y);
+            
+            // Build covariance matrix
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n; j++) {
+                    K[i][j] = rbfKernel(dataPoints[i].x, dataPoints[j].x);
+                    if (i === j) K[i][j] += noiseVariance;
+                }
+            }
+            
+            const KInv = matrixInverse(K);
+            
+            return testPoints.map(testX => {
+                const kStar = dataPoints.map(p => rbfKernel(testX, p.x));
+                
+                // Mean prediction
+                let mean = 0;
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        mean += kStar[i] * KInv[i][j] * y[j];
+                    }
+                }
+                
+                // Variance prediction
+                let variance_pred = rbfKernel(testX, testX);
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        variance_pred -= kStar[i] * KInv[i][j] * kStar[j];
+                    }
+                }
+                
+                return {
+                    mean: mean,
+                    variance: Math.max(0, variance_pred)
+                };
+            });
+        }
+        
+        // Coordinate transformation
+        function toCanvas(x, y) {
+            const canvasX = ((x - xRange[0]) / (xRange[1] - xRange[0])) * (canvas.width - 100) + 50;
+            const canvasY = canvas.height - 50 - ((y - yRange[0]) / (yRange[1] - yRange[0])) * (canvas.height - 100);
+            return [canvasX, canvasY];
+        }
+        
+        function fromCanvas(canvasX, canvasY) {
+            const x = ((canvasX - 50) / (canvas.width - 100)) * (xRange[1] - xRange[0]) + xRange[0];
+            const y = yRange[0] + ((canvas.height - 50 - canvasY) / (canvas.height - 100)) * (yRange[1] - yRange[0]);
+            return [x, y];
+        }
+        
+        // Drawing functions
+        function drawAxes() {
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            
+            const [originX, originY] = toCanvas(0, 0);
+            
+            // X-axis
+            ctx.beginPath();
+            ctx.moveTo(50, originY);
+            ctx.lineTo(canvas.width - 50, originY);
+            ctx.stroke();
+            
+            // Y-axis
+            ctx.beginPath();
+            ctx.moveTo(originX, 50);
+            ctx.lineTo(originX, canvas.height - 50);
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            
+            for (let x = -2; x <= 2; x++) {
+                const [canvasX] = toCanvas(x, 0);
+                ctx.fillText(x.toString(), canvasX, originY + 20);
+            }
+            
+            ctx.textAlign = 'right';
+            for (let y = -2; y <= 2; y++) {
+                if (y !== 0) {
+                    const [, canvasY] = toCanvas(0, y);
+                    ctx.fillText(y.toString(), originX - 10, canvasY + 5);
+                }
+            }
+        }
+        
+        function drawGP() {
+            const predictions = predictGP(testX);
+            
+            // Draw uncertainty band
+            ctx.fillStyle = 'rgba(100, 150, 255, 0.3)';
+            ctx.beginPath();
+            
+            // Upper bound
+            for (let i = 0; i < testX.length; i++) {
+                const upperBound = predictions[i].mean + 2 * Math.sqrt(predictions[i].variance);
+                const [canvasX, canvasY] = toCanvas(testX[i], upperBound);
+                if (i === 0) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            
+            // Lower bound (reverse order)
+            for (let i = testX.length - 1; i >= 0; i--) {
+                const lowerBound = predictions[i].mean - 2 * Math.sqrt(predictions[i].variance);
+                const [canvasX, canvasY] = toCanvas(testX[i], lowerBound);
+                ctx.lineTo(canvasX, canvasY);
+            }
+            
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw mean prediction
+            ctx.strokeStyle = '#4c9eff';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            for (let i = 0; i < testX.length; i++) {
+                const [canvasX, canvasY] = toCanvas(testX[i], predictions[i].mean);
+                if (i === 0) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+        }
+        
+        function drawTrueFunction() {
+            ctx.strokeStyle = '#ff4757';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            
+            for (let i = 0; i < testX.length; i++) {
+                const y = trueFunction(testX[i]);
+                const [canvasX, canvasY] = toCanvas(testX[i], y);
+                if (i === 0) ctx.moveTo(canvasX, canvasY);
+                else ctx.lineTo(canvasX, canvasY);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+        
+        function drawDataPoints() {
+            dataPoints.forEach((point, index) => {
+                const [canvasX, canvasY] = toCanvas(point.x, point.y);
+                
+                // Animate point appearance
+                const age = Date.now() - point.timestamp;
+                const scale = Math.min(1, age / 500);
+                
+                ctx.fillStyle = '#2ed573';
+                ctx.beginPath();
+                ctx.arc(canvasX, canvasY, 8 * scale, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Point number
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText((index + 1).toString(), canvasX, canvasY + 4);
+            });
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            drawAxes();
+            drawTrueFunction();
+            drawGP();
+            drawDataPoints();
+            
+            updateInfo();
+        }
+        
+        function updateInfo() {
+            document.getElementById('dataCount').textContent = `Data points: ${dataPoints.length}`;
+            
+            if (dataPoints.length === 0) {
+                document.getElementById('uncertaintyLevel').textContent = 'Average uncertainty: High';
+            } else {
+                const predictions = predictGP(testX);
+                const avgUncertainty = predictions.reduce((sum, p) => sum + Math.sqrt(p.variance), 0) / predictions.length;
+                const level = avgUncertainty > 0.8 ? 'High' : avgUncertainty > 0.4 ? 'Medium' : 'Low';
+                document.getElementById('uncertaintyLevel').textContent = `Average uncertainty: ${level}`;
+            }
+        }
+        
+        function addDataPoint() {
+            if (dataPoints.length >= 15) {
+                document.getElementById('addBtn').disabled = true;
+                return;
+            }
+            
+            // Sample a point from the true function with some noise
+            const x = xRange[0] + Math.random() * (xRange[1] - xRange[0]);
+            const y = trueFunction(x) + (Math.random() - 0.5) * 0.2;
+            
+            dataPoints.push({
+                x: x,
+                y: y,
+                timestamp: Date.now()
+            });
+            
+            draw();
+        }
+        
+        function resetAnimation() {
+            dataPoints = [];
+            document.getElementById('addBtn').disabled = false;
+            if (autoPlay) toggleAutoPlay();
+            draw();
+        }
+        
+        function toggleAutoPlay() {
+            autoPlay = !autoPlay;
+            const btn = document.getElementById('autoBtn');
+            
+            if (autoPlay) {
+                btn.textContent = 'Stop Auto';
+                btn.style.background = 'linear-gradient(45deg, #ff6b6b, #c44569)';
+                autoPlayInterval = setInterval(() => {
+                    if (dataPoints.length < 15) {
+                        addDataPoint();
+                    } else {
+                        toggleAutoPlay();
+                    }
+                }, 1500);
+            } else {
+                btn.textContent = 'Auto Play';
+                btn.style.background = 'linear-gradient(45deg, #ff6b6b, #ee5a24)';
+                clearInterval(autoPlayInterval);
+            }
+        }
+        
+        // Initialize
+        generateNewFunction();
+        draw();
+    </script>
+</body>
+</html>
