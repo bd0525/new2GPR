@@ -6,7 +6,7 @@ This repository contains my learning journey with Gaussian Process Regression, o
 </p>
 
 ## Interactive Demos
-- **[GP Regression Animation](https://bydeng01.github.io/new2GPR/03_gaussian_processes/simple_gpr_gif_demo/gp_regression_animation.html)** - Interactive visualization showing how GP uncertainty evolves as training data is added
+- **[GP Regression Animation](https://bydeng01.github.io/new2GPR/docs/gp_regression_animation.html)** - Interactive visualization showing how GP uncertainty evolves as training data is added
 
 ## Directory Structure
 
